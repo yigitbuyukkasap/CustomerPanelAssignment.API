@@ -1,4 +1,6 @@
 using DataAccess.Data;
+using DataAccess.Repositories;
+using DataAccess.Repositories.IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,8 @@ namespace CustomerPanelAssignment.API
             options.UseSqlServer(
                 Configuration.GetConnectionString("CustomerPanelDb")));
 
+            //Adding Repositorys
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 
             services.AddSwaggerGen(c =>

@@ -1,7 +1,6 @@
 ﻿using CustomerPanelAssignment.API.Models;
 using DataAccess.Data;
 using DataAccess.Repositories.IRepository;
-using System;
 
 namespace DataAccess.Repositories
 {
