@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
@@ -50,7 +51,7 @@ namespace DataAccess.Repositories
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null, bool isTracking = true)
+        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null, bool isTracking = true)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
@@ -72,7 +73,7 @@ namespace DataAccess.Repositories
             {
                 query = query.AsNoTracking();
             }
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         public void Remove(T entity)

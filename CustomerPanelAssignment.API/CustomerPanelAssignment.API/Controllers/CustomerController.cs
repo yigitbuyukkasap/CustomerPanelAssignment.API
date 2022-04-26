@@ -24,9 +24,9 @@ namespace CustomerPanelAssignment.API.Controllers
 
         [HttpGet]
         [Route("[controller]")]
-        public IActionResult GetAllCustomers()
+        public async Task<IActionResult> GetAllCustomers()
         {
-            var customers = _customerRepo.GetAll(includeProperties: "Address");
+            var customers = await _customerRepo.GetAll(includeProperties: "Address");
             return Ok(_mapper.Map<List<Customer>>(customers));
         }
     }
