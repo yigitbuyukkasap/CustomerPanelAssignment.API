@@ -1,4 +1,5 @@
-﻿using DataAccess.Repositories.IRepository;
+﻿using CustomerPanelAssignment.API.Models.DataModels;
+using DataAccess.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,13 @@ namespace CustomerPanelAssignment.API.Controllers
         [Route("[controller]")]
         public IActionResult GetAllCustomers()
         {
-           return  Ok(_customerRepo.GetAll());
+            var customers = _customerRepo.GetAll(includeProperties:"Address");
+
+            //Populating Domain Models dm - DomainModal
+            var dmCustomers = new List<Customer>();
+            //dmCustomers = customers;
+
+            return Ok(customers);
         }
     }
 }
