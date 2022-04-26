@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CustomerPanelAssignment.API.Models.DataModels
+namespace CustomerPanelAssignment.API.Models.DomainModels
 {
     public class CustomerEmployee
     {

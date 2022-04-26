@@ -31,9 +31,11 @@ namespace CustomerPanelAssignment.API
             options.UseSqlServer(
                 Configuration.GetConnectionString("CustomerPanelDb")));
 
-            //Adding Repositorys
+            //Adding Repositories
             services.AddScoped<ICustomerRepository, CustomerRepository>();
 
+            //AutoMapper
+            services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddSwaggerGen(c =>
             {

@@ -1,4 +1,5 @@
-﻿using CustomerPanelAssignment.API.Models.DataModels;
+﻿using AutoMapper;
+using CustomerPanelAssignment.API.Models.DomainModels;
 using DataAccess.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,23 +13,21 @@ namespace CustomerPanelAssignment.API.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository _customerRepo;
+        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerRepository customerRepo)
+        public CustomerController(ICustomerRepository customerRepo, IMapper mapper)
         {
             _customerRepo = customerRepo;
+            _mapper = mapper;
+
         }
 
         [HttpGet]
         [Route("[controller]")]
         public IActionResult GetAllCustomers()
         {
-            var customers = _customerRepo.GetAll(includeProperties:"Address");
-
-            //Populating Domain Models dm - DomainModal
-            var dmCustomers = new List<Customer>();
-            //dmCustomers = customers;
-
-            return Ok(customers);
+            var customers = _customerRepo.GetAll(includeProperties: "Address");
+            return Ok(_mapper.Map<List<Customer>>(customers));
         }
     }
 }

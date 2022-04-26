@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CustomerPanelAssignment.API.Models.DataModels
+namespace CustomerPanelAssignment.API.Models.DomainModels
 {
     public class Address
     {
