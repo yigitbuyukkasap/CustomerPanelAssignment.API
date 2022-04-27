@@ -2,16 +2,24 @@
 using DataAccess.Data;
 using DataAccess.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
+        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _db;
 
-        public AuthRepository(ApplicationDbContext db)
+        public AuthRepository(ApplicationDbContext db, IConfiguration configuration)
         {
+            _configuration = configuration;
             _db = db;
         }
 
@@ -19,15 +27,15 @@ namespace DataAccess.Repositories
         {
             var user = await _db.User.FirstOrDefaultAsync(u => u.Email.ToLower().Equals(email.ToLower()));
 
-            //  1 KUllanici yoksa - Bulunamadi
-            //  2 Girilen Sifre Ile Hash uyusmaz ise - Yanlis Sifre
-            //  3 Her sey gectigi durum da - User Id Doner
+            //   KUllanici yoksa - Bulunamadi
+            //   Girilen Sifre Ile Hash uyusmaz ise - Yanlis Sifre
+            //   Her sey gectigi durum da - User Id Doner
             if (user == null)
                 return "Kullanici bulunamadi";
             else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return "Yanlis Sifre";
             else
-                return user.Id.ToString();
+                return CreateToken(user);
         }
 
         public async Task<int> Register(User user, string password)
@@ -86,6 +94,31 @@ namespace DataAccess.Repositories
                 return true;
             }
 
+        }
+
+        private string CreateToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Email) 
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = System.DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
