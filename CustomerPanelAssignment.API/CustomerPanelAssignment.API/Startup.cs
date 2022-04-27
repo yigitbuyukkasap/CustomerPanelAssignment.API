@@ -44,6 +44,7 @@ namespace CustomerPanelAssignment.API
 
             //Adding Repositories
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
 
             //AutoMapper
             services.AddAutoMapper(typeof(Startup).Assembly);
