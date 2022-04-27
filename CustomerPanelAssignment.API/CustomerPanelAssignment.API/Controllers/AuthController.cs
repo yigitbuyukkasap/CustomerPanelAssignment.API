@@ -22,9 +22,20 @@ namespace CustomerPanelAssignment.API.Controllers
         {
             var response = await _authRepository.Register(new User { Email = user.Email }, user.Password);
             if (response == 0)
-            {
                 return BadRequest(response);
-            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(DomainModels.User user)
+        {
+            var response = await _authRepository.Login(
+                user.Email, user.Password);
+
+            if (response == "Kullanici bulunamadi" && response == "Yanlis Sifre")
+                return BadRequest(response);
+
             return Ok(response);
         }
     }

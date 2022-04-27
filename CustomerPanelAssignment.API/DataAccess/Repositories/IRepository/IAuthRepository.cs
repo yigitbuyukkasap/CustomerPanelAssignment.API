@@ -6,7 +6,7 @@ namespace DataAccess.Repositories.IRepository
     public interface IAuthRepository
     {
         Task<int> Register(User user, string password);
-        Task<string> Login(string username, string password);
+        Task<string> Login(string email, string password);
         Task<bool> UserExists(string email);
     }
 }
