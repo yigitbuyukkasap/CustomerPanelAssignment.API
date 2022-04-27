@@ -24,6 +24,17 @@ namespace CustomerPanelAssignment.API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            // cors
+            services.AddCors((options) => {
+                options.AddPolicy("angularApplication", (builder) => {
+                    builder
+                    .WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .WithExposedHeaders("*");
+                });
+            });
+
             services.AddControllers();
 
             // Adding DbContext
@@ -56,6 +67,8 @@ namespace CustomerPanelAssignment.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("angularApplication");
 
             app.UseAuthorization();
 
