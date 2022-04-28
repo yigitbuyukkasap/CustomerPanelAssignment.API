@@ -33,7 +33,7 @@ namespace CustomerPanelAssignment.API.Controllers
             var response = await _authRepository.Login(
                 user.Email, user.Password);
 
-            if (response == "Kullanici bulunamadi" && response == "Yanlis Sifre")
+            if (response == "Kullanici bulunamadi" || response == "Yanlis Sifre")
                 return BadRequest(response);
 
             return Ok(response);

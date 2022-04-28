@@ -1,13 +1,16 @@
 using DataAccess.Data;
 using DataAccess.Repositories;
 using DataAccess.Repositories.IRepository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace CustomerPanelAssignment.API
 {
@@ -25,8 +28,10 @@ namespace CustomerPanelAssignment.API
         {
 
             // cors
-            services.AddCors((options) => {
-                options.AddPolicy("angularApplication", (builder) => {
+            services.AddCors((options) =>
+            {
+                options.AddPolicy("angularApplication", (builder) =>
+                {
                     builder
                     .WithOrigins("http://localhost:4200")
                     .AllowAnyHeader()
@@ -45,6 +50,18 @@ namespace CustomerPanelAssignment.API
             //Adding Repositories
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                            .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
             //AutoMapper
             services.AddAutoMapper(typeof(Startup).Assembly);
@@ -52,6 +69,13 @@ namespace CustomerPanelAssignment.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomerPanelAssignment.API", Version = "v1" });
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme { 
+                    Description = "Standart Authorization header using the Bearer scheme. Exaple : \"bearer {token}\" ",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
         }
 
@@ -64,12 +88,14 @@ namespace CustomerPanelAssignment.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomerPanelAssignment.API v1"));
             }
+            app.UseCors("angularApplication");
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors("angularApplication");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using CustomerPanelAssignment.API.Models.DomainModels;
 using DataAccess.Repositories.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CustomerPanelAssignment.API.Controllers
 {
+    [Authorize]
     [ApiController]
+    [Route("[controller]")]
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository _customerRepo;
@@ -21,12 +22,14 @@ namespace CustomerPanelAssignment.API.Controllers
             _mapper = mapper;
 
         }
-
-        [HttpGet]
-        [Route("[controller]")]
-        public async Task<IActionResult> GetAllCustomers()
+        [AllowAnonymous]
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
+            //int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            
             var customers = await _customerRepo.GetAll(includeProperties: "Address");
+            
             return Ok(_mapper.Map<List<Customer>>(customers));
         }
     }
