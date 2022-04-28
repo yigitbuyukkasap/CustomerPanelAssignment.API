@@ -25,9 +25,9 @@ namespace DataAccess.Repositories
             dbSet.Add(entity);
         }
 
-        public T Find(int id)
+        public async Task<T> Find(Guid id)
         {
-            return dbSet.Find(id);
+             return await dbSet.FindAsync(id);
         }
 
         public T FirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null, bool isTracking = true)

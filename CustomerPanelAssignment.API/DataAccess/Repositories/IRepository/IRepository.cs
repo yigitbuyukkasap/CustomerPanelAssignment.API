@@ -8,7 +8,7 @@ namespace DataAccess.Repositories.IRepository
 {
     public interface IRepository<T> where T : class
     {
-        T Find(int id);
+        Task<T> Find(Guid id);
 
         Task<IEnumerable<T>> GetAll(
             Expression<Func<T, bool>> filter = null,
