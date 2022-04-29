@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CustomerPanelAssignment.API.Models.DomainModels;
+using API = CustomerPanelAssignment.API.Models;
 using DataAccess.Repositories.IRepository;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -36,10 +36,28 @@ namespace CustomerPanelAssignment.API.Controllers
         public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId) 
         {
             var customer = await _customerRepo.Find(customerId);
+
             if (customer == null)
                 return NotFound();
 
             return Ok(_mapper.Map<Customer>(customer));
+        }
+
+        [HttpPut(("UpdateCustomer/{customerId:guid}"))]
+        public async Task<IActionResult> UpdateCustomer([FromRoute] Guid customerId, [FromBody] UpdateCustomerRequest request ) 
+        {
+           var exist = await _customerRepo.Find(customerId);
+
+            if (exist != null)
+            {
+                var updatedCustomer = await _customerRepo.Update(_mapper.Map<API.Models.Customer>(request), customerId);
+                return Ok(_mapper.Map<Customer>(updatedCustomer));
+            }
+            else 
+            {
+                return NotFound();
+            }
+
         }
     }
 }

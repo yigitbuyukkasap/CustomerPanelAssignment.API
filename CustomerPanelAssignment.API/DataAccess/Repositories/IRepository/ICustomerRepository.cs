@@ -9,6 +9,6 @@ namespace DataAccess.Repositories.IRepository
 {
     public interface ICustomerRepository : IRepository<Customer>
     {
-        void Update(Customer obj);
+        Task<Customer> Update(Customer obj, Guid customerId);
     }
 }

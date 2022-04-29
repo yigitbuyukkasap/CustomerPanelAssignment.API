@@ -13,6 +13,7 @@ namespace CustomerPanelAssignment.API.Profiles
             CreateMap<DataModel.CustomerEmployee, CustomerEmployee>().ReverseMap();
             CreateMap<DataModel.Address, Address>().ReverseMap();
             CreateMap<DataModel.Department, Department>().ReverseMap();
+            CreateMap<UpdateCustomerRequest, DataModel.Customer>().AfterMap<UpdateCustomerRequestAfterMap>();
         }
 
     }
