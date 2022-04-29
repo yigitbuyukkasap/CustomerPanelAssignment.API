@@ -76,9 +76,9 @@ namespace DataAccess.Repositories
             return await query.ToListAsync();
         }
 
-        public void Remove(T entity)
+        public  void Remove(T entity)
         {
-            dbSet.Remove(entity);
+             dbSet.Remove(entity);
         }
 
         public void RemoveRange(IEnumerable<T> entity)
@@ -88,7 +88,7 @@ namespace DataAccess.Repositories
 
         public void Save()
         {
-            _db.SaveChanges();
+            _db.SaveChangesAsync();
         }
     }
 }

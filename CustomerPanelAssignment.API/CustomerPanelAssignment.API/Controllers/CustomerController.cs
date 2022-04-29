@@ -43,7 +43,7 @@ namespace CustomerPanelAssignment.API.Controllers
             return Ok(_mapper.Map<Customer>(customer));
         }
 
-        [HttpPut(("UpdateCustomer/{customerId:guid}"))]
+        [HttpPut("UpdateCustomer/{customerId:guid}")]
         public async Task<IActionResult> UpdateCustomer([FromRoute] Guid customerId, [FromBody] UpdateCustomerRequest request ) 
         {
            var exist = await _customerRepo.Find(customerId);
@@ -58,6 +58,23 @@ namespace CustomerPanelAssignment.API.Controllers
                 return NotFound();
             }
 
+        }
+
+        [HttpDelete("DeleteCustomer/{customerId:guid}")]
+        public async Task<IActionResult> DeleteCustomer([FromRoute] Guid customerId) 
+        {
+            var exist = await _customerRepo.Find(customerId);
+
+            if (exist != null)
+            {
+                 _customerRepo.Remove(exist);
+                _customerRepo.Save();
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
