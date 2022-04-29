@@ -17,7 +17,7 @@ namespace DataAccess.Repositories.IRepository
             bool isTracking = true
             );
 
-        T FirstOrDefault(
+        Task<T> FirstOrDefault(
             Expression<Func<T, bool>> filter = null,
             string includeProperties = null,
             bool isTracking = true

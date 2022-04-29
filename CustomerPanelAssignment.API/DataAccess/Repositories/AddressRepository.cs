@@ -4,17 +4,17 @@ using DataAccess.Repositories.IRepository;
 
 namespace DataAccess.Repositories
 {
-    public class CustomerRepository : Repository<Customer>, ICustomerRepository
+    public class AddressRepository : Repository<Address>, IAddressRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public CustomerRepository(ApplicationDbContext db) : base(db)
+        public AddressRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public void Update(Customer obj)
+        public void Update(Address obj)
         {
-            _db.Customer.Update(obj);
+            _db.Address.Update(obj);
         }
     }
 }

@@ -5,17 +5,17 @@ using System;
 
 namespace DataAccess.Repositories
 {
-    public class CustomerRepository : Repository<Customer>, ICustomerRepository
+    public class EmployeeRepository : Repository<Employee>, IEmployeeRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public CustomerRepository(ApplicationDbContext db) : base(db)
+        public EmployeeRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public void Update(Customer obj)
+        public void Update(Employee obj)
         {
-            _db.Customer.Update(obj);
+            _db.Employee.Update(obj);
         }
     }
 }

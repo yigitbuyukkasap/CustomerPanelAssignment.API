@@ -37,9 +37,8 @@ namespace CustomerPanelAssignment.API.Controllers
         {
             var customer = await _customerRepo.Find(customerId);
             if (customer == null)
-            {
                 return NotFound();
-            }
+
             return Ok(_mapper.Map<Customer>(customer));
         }
     }

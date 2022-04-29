@@ -50,6 +50,9 @@ namespace CustomerPanelAssignment.API
             //Adding Repositories
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+
+            // Auth JWT TOKEN CONF
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
