@@ -22,17 +22,37 @@ namespace CustomerPanelAssignment.API.Controllers
             _mapper = mapper;
 
         }
+
+        [HttpPost("AddCustomer")]
+        public async Task<IActionResult> PostAddCustomer([FromBody] UpdateCustomerRequest request)
+        {
+            var exist = await _customerRepo.FirstOrDefault(c => c.Name.Equals(request.Name));
+
+            if (exist == null)
+            {
+                var customer = await _customerRepo.Add(_mapper.Map<API.Models.Customer>(request));
+                _customerRepo.Save();
+                return CreatedAtAction(
+                    nameof(GetCustomer), 
+                    new { customerId = customer.Id }, 
+                    _mapper.Map<Customer>(customer));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            //int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
             var customers = await _customerRepo.GetAll(includeProperties: "Address");
 
             return Ok(_mapper.Map<List<Customer>>(customers));
         }
     
         [HttpGet("GetCustomer/{customerId:guid}")]
+        [ActionName("GetCustomer")]
         public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId) 
         {
             var customer = await _customerRepo.Find(customerId);

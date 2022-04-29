@@ -23,7 +23,7 @@ namespace DataAccess.Repositories.IRepository
             bool isTracking = true
             );
 
-        void Add(T entity);
+        Task<T> Add(T entity);
 
         void Remove(T entity);
 

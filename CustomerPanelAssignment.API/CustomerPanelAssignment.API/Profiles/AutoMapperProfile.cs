@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CustomerPanelAssignment.API.Models.DomainModels;
+using Models.DomainModels;
 using DataModel = CustomerPanelAssignment.API.Models;
 
 namespace CustomerPanelAssignment.API.Profiles
@@ -14,6 +15,7 @@ namespace CustomerPanelAssignment.API.Profiles
             CreateMap<DataModel.Address, Address>().ReverseMap();
             CreateMap<DataModel.Department, Department>().ReverseMap();
             CreateMap<UpdateCustomerRequest, DataModel.Customer>().AfterMap<UpdateCustomerRequestAfterMap>();
+            CreateMap<AddCustomerRequest, DataModel.Customer>().AfterMap<AddCustomerRequestAfterMap>();
         }
 
     }

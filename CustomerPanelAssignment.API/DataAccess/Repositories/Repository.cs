@@ -20,9 +20,10 @@ namespace DataAccess.Repositories
             this.dbSet = _db.Set<T>();
         }
 
-        public void Add(T entity)
+        public async Task<T> Add(T entity)
         {
-            dbSet.Add(entity);
+            var customer = await dbSet.AddAsync(entity);
+            return customer.Entity;
         }
 
         public async Task<T> Find(Guid id)
