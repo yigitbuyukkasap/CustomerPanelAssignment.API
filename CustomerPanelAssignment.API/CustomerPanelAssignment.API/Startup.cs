@@ -73,7 +73,7 @@ namespace CustomerPanelAssignment.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomerPanelAssignment.API", Version = "v1" });
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme { 
-                    Description = "Standart Authorization header using the Bearer scheme. Exaple : \"bearer {token}\" ",
+                    Description = "Bearer auth. ornek : \"bearer {token}\" ",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey

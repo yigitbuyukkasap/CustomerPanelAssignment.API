@@ -20,7 +20,7 @@ namespace CustomerPanelAssignment.API.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register(DomainModels.User user)
         {
-            var response = await _authRepository.Register(new User { Email = user.Email }, user.Password);
+            var response = await _authRepository.Register(new User { Email = user.Email, Name = user.Name }, user.Password);
             if (response == 0)
                 return BadRequest(response);
 

@@ -70,6 +70,7 @@ namespace DataAccess.Repositories
         }
 
 
+
         // Creating passwordhash
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -120,5 +121,6 @@ namespace DataAccess.Repositories
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+        
     }
 }

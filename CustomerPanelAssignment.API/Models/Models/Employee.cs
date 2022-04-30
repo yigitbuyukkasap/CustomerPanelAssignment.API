@@ -14,6 +14,6 @@ namespace CustomerPanelAssignment.API.Models
         public string PhoneNumber { get; set; }
 
         // Navigation Prop
-        public Department Department { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

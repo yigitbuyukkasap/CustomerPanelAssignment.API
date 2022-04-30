@@ -13,6 +13,5 @@ namespace CustomerPanelAssignment.API.Models.DomainModels
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
-        public Department Department { get; set; }
     }
 }

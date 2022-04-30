@@ -13,8 +13,5 @@ namespace CustomerPanelAssignment.API.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
-        //Navigation Prop
-        public Role Role { get; set; }
-        public Customer Customer { get; set; }
     }
 }
