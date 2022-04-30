@@ -103,18 +103,30 @@ namespace CustomerPanelAssignment.API.Controllers
         [HttpPost("UploadImage/{customerId:guid}")]
         public async Task<IActionResult> UploadImage([FromRoute] Guid customerId, IFormFile image)
         {
-            var exist = await _customerRepo.Find(customerId);
-
-            if (exist != null)
+            var validExtension = new List<String>
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-                var fileImagePath = await _imageRepo.Upload(image, fileName);
-                if (await _customerRepo.UpdateImage(customerId, fileImagePath))
+                ".jpeg",
+                ".png",
+                ".gif",
+                ".jpg"
+            };
+            if (image != null && image.Length > 0)
+            {
+                var extension = Path.GetExtension(image.FileName);
+                if (validExtension.Contains(extension))
                 {
+                    var exist = await _customerRepo.Find(customerId);
+                    if (exist != null)
+                    {
+                        var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                        var fileImagePath = await _imageRepo.Upload(image, fileName);
+                        if (await _customerRepo.UpdateImage(customerId, fileImagePath))
+                            return Ok(fileImagePath);
 
-                    return Ok(fileImagePath);
+                        return StatusCode(StatusCodes.Status500InternalServerError, "Error Resimin Guncellenmesi");
+                    }
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error Resimin Guncellenmesi");
+                return BadRequest("Image Format UYGUN DEGIL");
             }
 
             return NotFound();
