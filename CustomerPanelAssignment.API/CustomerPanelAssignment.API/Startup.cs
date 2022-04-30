@@ -1,16 +1,19 @@
 using DataAccess.Data;
 using DataAccess.Repositories;
 using DataAccess.Repositories.IRepository;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.IO;
 
 namespace CustomerPanelAssignment.API
 {
@@ -42,6 +45,10 @@ namespace CustomerPanelAssignment.API
 
             services.AddControllers();
 
+            //fluent valid
+            services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+
             // Adding DbContext
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
@@ -52,6 +59,7 @@ namespace CustomerPanelAssignment.API
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
 
             // Auth JWT TOKEN CONF
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -95,6 +103,11 @@ namespace CustomerPanelAssignment.API
             app.UseCors("angularApplication");
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions { 
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Resources")),
+                RequestPath = "/Resources"
+            });;
 
             app.UseRouting();
 

@@ -17,7 +17,7 @@ namespace DataAccess.Repositories
 
         public async Task<Customer> Update(Customer obj, Guid customerId)
         {
-            var customer = await FirstOrDefault(c => c.Id.Equals(customerId), includeProperties:"Address");
+            var customer = await FirstOrDefault(c => c.Id.Equals(customerId), includeProperties: "Address");
             if (customer != null)
             {
                 customer.Name = obj.Name;
@@ -30,6 +30,18 @@ namespace DataAccess.Repositories
                 return customer;
             }
             return null;
+        }
+
+        public async Task<bool> UpdateImage(Guid customerId, string imageUrl)
+        {
+            var customer = await Find(customerId);
+            if (customer != null)
+            {
+                customer.ImageUrl = imageUrl;
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

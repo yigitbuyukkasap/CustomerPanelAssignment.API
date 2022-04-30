@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace CustomerPanelAssignment.API.Controllers
 {
@@ -15,12 +17,13 @@ namespace CustomerPanelAssignment.API.Controllers
     {
         private readonly ICustomerRepository _customerRepo;
         private readonly IMapper _mapper;
+        private readonly IImageRepository _imageRepo;
 
-        public CustomerController(ICustomerRepository customerRepo, IMapper mapper)
+        public CustomerController(ICustomerRepository customerRepo, IMapper mapper, IImageRepository imageRepo)
         {
             _customerRepo = customerRepo;
             _mapper = mapper;
-
+            _imageRepo = imageRepo;
         }
 
         [HttpPost("AddCustomer")]
@@ -95,6 +98,27 @@ namespace CustomerPanelAssignment.API.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost("UploadImage/{customerId:guid}")]
+        public async Task<IActionResult> UploadImage([FromRoute] Guid customerId, IFormFile image)
+        {
+            var exist = await _customerRepo.Find(customerId);
+
+            if (exist != null)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                var fileImagePath = await _imageRepo.Upload(image, fileName);
+                if (await _customerRepo.UpdateImage(customerId, fileImagePath))
+                {
+
+                    return Ok(fileImagePath);
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error Resimin Guncellenmesi");
+            }
+
+            return NotFound();
+
         }
     }
 }

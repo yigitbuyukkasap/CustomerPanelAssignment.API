@@ -10,5 +10,7 @@ namespace DataAccess.Repositories.IRepository
     public interface ICustomerRepository : IRepository<Customer>
     {
         Task<Customer> Update(Customer obj, Guid customerId);
+        Task<bool> UpdateImage(Guid customerId, string imageUrl);
+
     }
 }
