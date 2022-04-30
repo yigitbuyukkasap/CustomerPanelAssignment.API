@@ -14,6 +14,7 @@ namespace CustomerPanelAssignment.API.Profiles
             CreateMap<DataModel.Address, Address>().ReverseMap();
             CreateMap<UpdateCustomerRequest, DataModel.Customer>().AfterMap<UpdateCustomerRequestAfterMap>();
             CreateMap<AddCustomerRequest, DataModel.Customer>().AfterMap<AddCustomerRequestAfterMap>();
+            CreateMap<EmployeeRequest, DataModel.Employee>().AfterMap<AddEmployeeRequestAfterMap>();
         }
 
     }

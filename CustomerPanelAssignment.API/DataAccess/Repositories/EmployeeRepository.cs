@@ -2,6 +2,7 @@
 using DataAccess.Data;
 using DataAccess.Repositories.IRepository;
 using System;
+using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
@@ -13,9 +14,22 @@ namespace DataAccess.Repositories
         {
             _db = db;
         }
-        public void Update(Employee obj)
+
+        public async Task<Employee> Update(Employee obj, Guid employeeId)
         {
-            _db.Employee.Update(obj);
+            var employee = await FirstOrDefault(c => c.Id.Equals(employeeId));
+            if (employee != null)
+            {
+                employee.Name= obj.Name;
+                employee.LastName= obj.LastName;
+                employee.Email= obj.Email;
+                employee.PhoneNumber= obj.PhoneNumber;
+                employee.CustomerId= obj.CustomerId;
+
+                await _db.SaveChangesAsync();
+                return employee;
+            }
+            return null;
         }
     }
 }

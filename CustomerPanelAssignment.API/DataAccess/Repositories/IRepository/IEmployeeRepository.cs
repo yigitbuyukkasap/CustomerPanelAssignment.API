@@ -9,6 +9,6 @@ namespace DataAccess.Repositories.IRepository
 {
     public interface IEmployeeRepository : IRepository<Employee>
     {
-        void Update(Employee obj);
+        Task<Employee> Update(Employee obj, Guid employeeId);
     }
 }

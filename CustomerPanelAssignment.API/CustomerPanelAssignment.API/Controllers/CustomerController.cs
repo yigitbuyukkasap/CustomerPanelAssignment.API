@@ -33,8 +33,8 @@ namespace CustomerPanelAssignment.API.Controllers
                 var customer = await _customerRepo.Add(_mapper.Map<API.Models.Customer>(request));
                 _customerRepo.Save();
                 return CreatedAtAction(
-                    nameof(GetCustomer), 
-                    new { customerId = customer.Id }, 
+                    nameof(GetCustomer),
+                    new { customerId = customer.Id },
                     _mapper.Map<Customer>(customer));
             }
             else
@@ -50,10 +50,10 @@ namespace CustomerPanelAssignment.API.Controllers
 
             return Ok(_mapper.Map<List<Customer>>(customers));
         }
-    
+
         [HttpGet("GetCustomer/{customerId:guid}")]
         [ActionName("GetCustomer")]
-        public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId) 
+        public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId)
         {
             var customer = await _customerRepo.Find(customerId);
 
@@ -64,16 +64,16 @@ namespace CustomerPanelAssignment.API.Controllers
         }
 
         [HttpPut("UpdateCustomer/{customerId:guid}")]
-        public async Task<IActionResult> UpdateCustomer([FromRoute] Guid customerId, [FromBody] UpdateCustomerRequest request ) 
+        public async Task<IActionResult> UpdateCustomer([FromRoute] Guid customerId, [FromBody] UpdateCustomerRequest request)
         {
-           var exist = await _customerRepo.Find(customerId);
+            var exist = await _customerRepo.Find(customerId);
 
             if (exist != null)
             {
                 var updatedCustomer = await _customerRepo.Update(_mapper.Map<API.Models.Customer>(request), customerId);
                 return Ok(_mapper.Map<Customer>(updatedCustomer));
             }
-            else 
+            else
             {
                 return NotFound();
             }
@@ -81,13 +81,13 @@ namespace CustomerPanelAssignment.API.Controllers
         }
 
         [HttpDelete("DeleteCustomer/{customerId:guid}")]
-        public async Task<IActionResult> DeleteCustomer([FromRoute] Guid customerId) 
+        public async Task<IActionResult> DeleteCustomer([FromRoute] Guid customerId)
         {
             var exist = await _customerRepo.Find(customerId);
 
             if (exist != null)
             {
-                 _customerRepo.Remove(exist);
+                _customerRepo.Remove(exist);
                 _customerRepo.Save();
                 return Ok();
             }
